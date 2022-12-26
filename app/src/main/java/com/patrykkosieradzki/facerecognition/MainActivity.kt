@@ -3,7 +3,6 @@ package com.patrykkosieradzki.facerecognition
 import android.annotation.SuppressLint
 import android.graphics.PointF
 import android.os.Bundle
-import android.util.Log
 import android.util.Size
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,7 +20,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -114,7 +112,7 @@ fun CameraPreview(modifier: Modifier, onFaceChanged: (RecognizedFace?) -> Unit) 
                 }
 
                 val cameraSelector = CameraSelector.Builder()
-                    .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                     .build()
 
                 val imageAnalysis = ImageAnalysis.Builder()
@@ -123,7 +121,7 @@ fun CameraPreview(modifier: Modifier, onFaceChanged: (RecognizedFace?) -> Unit) 
                     .setImageQueueDepth(10)
                     .build()
                     .apply {
-                        setAnalyzer(executor, FaceAnalyzer(onFaceChanged))
+                        setAnalyzer(executor, FaceAnalyzer(previewView.width, previewView.height, onFaceChanged))
                     }
 
                 cameraProvider.unbindAll()
@@ -145,36 +143,26 @@ fun CameraOverlay(modifier: Modifier, face: RecognizedFace?) {
         modifier = modifier
     ) {
         face?.let { it ->
-            val oval = it.face
-            for (i in oval.indices) {
-                val current = oval[i]
-                val next = if (i < oval.size - 1) {
-                    oval[i + 1]
-                } else {
-                    oval[0]
-                }
-                drawLine(
-                    Color.White,
-                    Offset(current.x, current.y),
-                    Offset(next.x, next.y),
-                    strokeWidth = 3f
-                )
-            }
-            val box = it.boundingBox
-            drawRedLine(box.left, box.top, box.right, box.top)
-            drawRedLine(box.right, box.top, box.right, box.bottom)
-            drawRedLine(box.right, box.bottom, box.left, box.bottom)
-            drawRedLine(box.left, box.bottom, box.left, box.top)
+            drawShape(it.face, Color.White)
+            drawShape(it.boundingBox, Color.Red)
         }
     }
 }
 
-private fun DrawScope.drawRedLine(x1: Int, y1: Int, x2: Int, y2: Int) {
-    drawLine(
-        Color.Red,
-        Offset(x1.toFloat(), y1.toFloat()),
-        Offset(x2.toFloat(), y2.toFloat()),
-        strokeWidth = 3f
-    )
+private fun DrawScope.drawShape(points: List<PointF>, color: Color) {
+    for (i in points.indices) {
+        val current = points[i]
+        val next = if (i < points.size - 1) {
+            points[i + 1]
+        } else {
+            points[0]
+        }
+        drawLine(
+            color,
+            Offset(current.x, current.y),
+            Offset(next.x, next.y),
+            strokeWidth = 3f
+        )
+    }
 }
 
