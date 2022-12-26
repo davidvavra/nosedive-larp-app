@@ -1,6 +1,7 @@
 package com.patrykkosieradzki.facerecognition
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
@@ -29,6 +30,7 @@ class FaceAnalyzer : ImageAnalysis.Analyzer {
 
             detector.process(inputImage)
                 .addOnSuccessListener { faces ->
+                    Log.d("XXX", faces.toString())
                     imageProxy.close()
                 }
                 .addOnFailureListener {
