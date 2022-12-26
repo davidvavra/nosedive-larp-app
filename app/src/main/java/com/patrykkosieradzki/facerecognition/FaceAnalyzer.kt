@@ -1,14 +1,15 @@
 package com.patrykkosieradzki.facerecognition
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.Face
+import com.google.mlkit.vision.face.FaceContour
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 
-class FaceAnalyzer : ImageAnalysis.Analyzer {
+class FaceAnalyzer(private val onFaceChanged: (RecognizedFace?)->Unit) : ImageAnalysis.Analyzer {
 
     private val realTimeOpts = FaceDetectorOptions.Builder()
         .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
@@ -30,15 +31,26 @@ class FaceAnalyzer : ImageAnalysis.Analyzer {
 
             detector.process(inputImage)
                 .addOnSuccessListener { faces ->
-                    Log.d("XXX", faces.toString())
+                    onFaceChanged(extractFace(faces))
                     imageProxy.close()
                 }
                 .addOnFailureListener {
+                    onFaceChanged(null)
                     imageProxy.close()
                 }
                 .addOnCompleteListener {
                     imageProxy.close()
                 }
         }
+    }
+
+    private fun extractFace(faces: List<Face>): RecognizedFace? {
+        faces.firstOrNull()?.let { face ->
+            val faceContour = face.getContour(FaceContour.FACE)
+            faceContour?.let {
+                return RecognizedFace(it.points, face.boundingBox)
+            }
+        }
+        return null
     }
 }
