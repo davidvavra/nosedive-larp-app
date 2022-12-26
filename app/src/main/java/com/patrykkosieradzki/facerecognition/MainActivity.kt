@@ -13,20 +13,31 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -89,7 +100,10 @@ fun FaceRecognitionScreenContent(
             modifier = Modifier.fillMaxSize()
         ) {
             CameraPreview(Modifier.matchParentSize(), onFaceChanged)
-            CameraOverlay(Modifier.matchParentSize(), state.face)
+            if (state.face != null) {
+                FaceOverlay(Modifier.matchParentSize(), state.face.face)
+                RatingOverlay(state.face.boundingBox[1], state.face.boundingBox[2])
+            }
         }
     }
 }
@@ -121,7 +135,10 @@ fun CameraPreview(modifier: Modifier, onFaceChanged: (RecognizedFace?) -> Unit) 
                     .setImageQueueDepth(10)
                     .build()
                     .apply {
-                        setAnalyzer(executor, FaceAnalyzer(previewView.width, previewView.height, onFaceChanged))
+                        setAnalyzer(
+                            executor,
+                            FaceAnalyzer(previewView.width, previewView.height, onFaceChanged)
+                        )
                     }
 
                 cameraProvider.unbindAll()
@@ -138,14 +155,11 @@ fun CameraPreview(modifier: Modifier, onFaceChanged: (RecognizedFace?) -> Unit) 
 }
 
 @Composable
-fun CameraOverlay(modifier: Modifier, face: RecognizedFace?) {
+fun FaceOverlay(modifier: Modifier, face: List<PointF>) {
     Canvas(
         modifier = modifier
     ) {
-        face?.let { it ->
-            drawShape(it.face, Color.White)
-            drawShape(it.boundingBox, Color.Red)
-        }
+        drawShape(face, Color.White)
     }
 }
 
@@ -164,5 +178,76 @@ private fun DrawScope.drawShape(points: List<PointF>, color: Color) {
             strokeWidth = 3f
         )
     }
+}
+
+@Composable
+fun RatingOverlay(topLeft: PointF, bottomLeft: PointF) {
+    val height = (bottomLeft.y - topLeft.y).toDp()
+    Box(
+        modifier = Modifier
+            .offset(topLeft.x.toDp() + 10.dp, topLeft.y.toDp())
+            .defaultMinSize(minHeight = height),
+        contentAlignment = Alignment.Center
+    ) {
+        RatingOverlayContent()
+    }
+}
+
+@Composable
+private fun Float.toDp(): Dp {
+    return (this / LocalContext.current.resources.displayMetrics.density).dp
+}
+
+@Composable
+fun RatingOverlayContent() {
+    Column {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.bara),
+                contentDescription = "avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, Color.White, CircleShape)
+            )
+            Text(
+                "Bára",
+                modifier = Modifier.padding(start = 4.dp),
+                style = TextStyle(
+                    platformStyle = PlatformTextStyle(includeFontPadding = false),
+                    color = Color.White,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 50.sp
+                )
+            )
+        }
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(
+                "4.2",
+                Modifier.padding(start = 44.dp),
+                style = TextStyle(
+                    platformStyle = PlatformTextStyle(includeFontPadding = false),
+                    color = Color.White,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 50.sp
+                )
+            )
+            Text(
+                "83",
+                fontWeight = FontWeight.Normal,
+                fontSize = 25.sp,
+                color = Color.White,
+                modifier = Modifier.padding(bottom = 5.dp, start = 4.dp)
+            )
+        }
+
+    }
+}
+
+@Composable
+@androidx.compose.ui.tooling.preview.Preview
+fun RatingOverlayContentPreview() {
+    RatingOverlayContent()
 }
 
