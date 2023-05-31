@@ -1,8 +1,11 @@
 package me.vavra.dive
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,7 +23,10 @@ import coil.transform.CircleCropTransformation
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    LazyColumn {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        contentPadding = PaddingValues(all = 20.dp)
+    ) {
         items(viewModel.state.nearbyUsers) {
             UserRow(it)
         }
@@ -29,7 +35,9 @@ fun MainScreen(viewModel: MainViewModel) {
 
 @Composable
 fun UserRow(user: User) {
-    Row(modifier = Modifier.padding(horizontal = 20.dp).padding(top = 20.dp)) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(user.profilePictureUrl)
@@ -39,7 +47,12 @@ fun UserRow(user: User) {
             contentDescription = null,
             modifier = Modifier.size(60.dp)
         )
-        Column(modifier = Modifier.padding(start = 20.dp).fillMaxHeight().align(Alignment.CenterVertically)) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .align(Alignment.CenterVertically)
+                .padding(start = 20.dp)
+        ) {
             Text(text = user.name, style = MaterialTheme.typography.titleMedium)
             Text(text = user.totalRating.toString(), style = MaterialTheme.typography.titleLarge)
         }
