@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "110661909115",
+    "firebase_url": "https://nosedive-larp-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "nosedive-larp",
+    "storage_bucket": "nosedive-larp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110661909115:android:1bb971940157fbf50340de",
+        "android_client_info": {
+          "package_name": "me.vavra.dive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3xF7chO4ICvA28JnkOjEIiQailJzBxRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
