@@ -54,7 +54,17 @@ fun UserRow(user: User) {
                 .padding(start = 20.dp)
         ) {
             Text(text = user.name, style = MaterialTheme.typography.titleMedium)
-            Text(text = user.totalRating.toString(), style = MaterialTheme.typography.titleLarge)
+            Row() {
+                Text(text = user.mainRating, style = MaterialTheme.typography.titleLarge)
+                Text(
+                    text = user.detailedRating,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .align(Alignment.Bottom)
+                        .padding(bottom = 2.dp, start = 1.dp)
+                )
+            }
         }
     }
 }
