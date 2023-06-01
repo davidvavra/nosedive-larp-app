@@ -27,6 +27,7 @@ object Database {
                     profilePictureUrl = checkNotNull(
                         snapshot.child("profilePictureUrl").getValue<String>()
                     ),
+                    totalRating = totalRating,
                     mainRating = totalRating.formatToOnceDecimal(),
                     detailedRating = totalRating.extractThirdAndFourthDecimal()
                 )

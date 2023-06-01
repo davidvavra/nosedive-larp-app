@@ -8,14 +8,24 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    var state by mutableStateOf(MainState(listOf()))
+    var state by mutableStateOf(MainState())
         private set
+    private val userId = "bara"
 
     init {
         viewModelScope.launch {
             Database.observeNearbyUsers().collect { users ->
-                state = MainState(users.sortedBy { it.name })
+                state =
+                    MainState(
+                        nearbyUsers = users.sortedByDescending { it.totalRating }
+                            .filter { it.id != userId },
+                        loggedInUser = users.first { it.id == userId }.shortenName()
+                    )
             }
         }
+    }
+
+    private fun User.shortenName(): User {
+        return this.copy(name = this.name.split(" ")[0])
     }
 }
