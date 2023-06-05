@@ -1,16 +1,18 @@
 package me.vavra.dive
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     var state by mutableStateOf(MainState())
         private set
     private val userId = "bara"
+    private val audio = Audio(app)
 
     init {
         viewModelScope.launch {
@@ -31,5 +33,18 @@ class MainViewModel : ViewModel() {
 
     fun selectUser(user: User) {
         state = state.copy(rating = Rating(user))
+    }
+
+    fun changeRating(stars: Int) {
+        audio.play(R.raw.rate)
+    }
+
+    fun sendRating() {
+        audio.play(R.raw.swoosh)
+        state = state.copy(rating = null)
+    }
+
+    fun closeRating() {
+        state = state.copy(rating = null)
     }
 }

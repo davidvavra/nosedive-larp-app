@@ -35,7 +35,12 @@ class MainActivity : ComponentActivity() {
                             viewModel.selectUser(it)
                         })
                     } else {
-                        RateScreen(state.loggedInUser, state.rating)
+                        RateScreen(
+                            state.loggedInUser,
+                            state.rating,
+                            onRatingChanged = { viewModel.changeRating(it) },
+                            onClose = { viewModel.closeRating() },
+                            onSend = { viewModel.sendRating() })
                     }
                 }
             }

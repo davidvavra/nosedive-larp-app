@@ -1,5 +1,6 @@
 package me.vavra.dive
 
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,26 +10,58 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarStyle
+import me.vavra.dive.ui.theme.Rate
 
 @Composable
-fun RateScreen(loggedInUser: User, rating: Rating) {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun RateScreen(
+    loggedInUser: User,
+    rating: Rating,
+    onRatingChanged: (Int) -> Unit,
+    onClose: () -> Unit,
+    onSend: () -> Unit
+) {
+    var swipeOffset by remember { mutableStateOf(0f) }
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .pointerInput(Unit) {
+            detectVerticalDragGestures { change, dragAmount ->
+                change.consume()
+                swipeOffset += dragAmount
+                if (swipeOffset > 150) {
+                    onClose()
+                } else if (swipeOffset < -150) {
+                    onSend()
+                }
+            }
+
+        }) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
                 loggedInUser.nameVokativ + ",",
                 modifier = Modifier.align(CenterHorizontally),
                 style = MaterialTheme.typography.headlineLarge
             )
-            Text("zde můžeš ohodnotit", style = MaterialTheme.typography.headlineMedium)
+            Text(
+                "zde můžeš ohodnotit",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.align(CenterHorizontally)
+            )
             Spacer(modifier = Modifier.height(32.dp))
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -46,6 +79,17 @@ fun RateScreen(loggedInUser: User, rating: Rating) {
                 rating.ofUser.nameAkuzativ,
                 modifier = Modifier.align(CenterHorizontally),
                 style = MaterialTheme.typography.displayMedium
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            var stars: Float by remember { mutableStateOf(0f) }
+            RatingBar(
+                value = stars,
+                style = RatingBarStyle.Stroke(activeColor = Rate, width = 3f),
+                onValueChange = { stars = it },
+                size = 46.dp,
+                spaceBetween = 6.dp,
+                onRatingChanged = { onRatingChanged(it.toInt()) },
+                modifier = Modifier.align(CenterHorizontally)
             )
         }
     }
@@ -67,6 +111,6 @@ private fun RateScreenPreview() {
                 "",
                 ""
             )
-        )
+        ), {}, {}, {}
     )
 }
