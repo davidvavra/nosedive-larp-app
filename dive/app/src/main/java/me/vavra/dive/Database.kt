@@ -24,6 +24,8 @@ object Database {
                 User(
                     id = checkNotNull(snapshot.key),
                     name = checkNotNull(snapshot.child("name").getValue<String>()),
+                    nameVokativ = checkNotNull(snapshot.child("nameVokativ").getValue<String>()),
+                    nameAkuzativ = checkNotNull(snapshot.child("nameAkuzativ").getValue<String>()),
                     profilePictureUrl = checkNotNull(
                         snapshot.child("profilePictureUrl").getValue<String>()
                     ),

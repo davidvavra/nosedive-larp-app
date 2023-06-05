@@ -28,4 +28,8 @@ class MainViewModel : ViewModel() {
     private fun User.shortenName(): User {
         return this.copy(name = this.name.split(" ")[0])
     }
+
+    fun selectUser(user: User) {
+        state = state.copy(rating = Rating(user))
+    }
 }

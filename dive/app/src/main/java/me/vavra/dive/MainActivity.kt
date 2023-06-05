@@ -29,7 +29,14 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                 ) {
-                    MainScreen(viewModel)
+                    val state = viewModel.state
+                    if (state.rating == null) {
+                        MainScreen(state, onUserSelected = {
+                            viewModel.selectUser(it)
+                        })
+                    } else {
+                        RateScreen(state.loggedInUser, state.rating)
+                    }
                 }
             }
         }

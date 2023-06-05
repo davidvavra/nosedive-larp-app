@@ -1,5 +1,6 @@
 package me.vavra.dive
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,7 +24,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(state: MainState, onUserSelected: (User) -> Unit) {
     Column {
         Row(
             modifier = Modifier
@@ -40,15 +41,17 @@ fun MainScreen(viewModel: MainViewModel) {
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
             Spacer(modifier = Modifier.weight(1f))
-            UserRow(user = viewModel.state.loggedInUser)
+            UserRow(user = state.loggedInUser)
         }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             contentPadding = PaddingValues(all = 20.dp)
         ) {
-            items(viewModel.state.nearbyUsers) {
+            items(state.nearbyUsers) {
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onUserSelected(it) }
                 ) {
                     UserRow(it)
                 }
