@@ -30,17 +30,21 @@ class MainActivity : ComponentActivity() {
                         )
                 ) {
                     val state = viewModel.state
-                    if (state.rating == null) {
-                        MainScreen(state, onUserSelected = {
-                            viewModel.selectUser(it)
-                        })
+                    if (state.loggedInUser == null) {
+                        LoginScreen(onLogin = {})
                     } else {
-                        RateScreen(
-                            state.loggedInUser,
-                            state.rating,
-                            onRatingChanged = { viewModel.changeRating(it) },
-                            onClose = { viewModel.closeRating() },
-                            onSend = { viewModel.sendRating() })
+                        if (state.rating == null) {
+                            MainScreen(state.nearbyUsers, state.loggedInUser, onUserSelected = {
+                                viewModel.selectUser(it)
+                            })
+                        } else {
+                            RateScreen(
+                                state.loggedInUser,
+                                state.rating,
+                                onRatingChanged = { viewModel.changeRating(it) },
+                                onClose = { viewModel.closeRating() },
+                                onSend = { viewModel.sendRating() })
+                        }
                     }
                 }
             }

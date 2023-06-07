@@ -10,9 +10,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = Nosedive1,
-    secondary = Nosedive2,
-    tertiary = Pink40
+    primary = Rate
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -34,7 +32,7 @@ fun DiveTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = Nosedive1.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }

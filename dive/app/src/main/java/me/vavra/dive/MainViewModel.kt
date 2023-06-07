@@ -21,7 +21,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                     MainState(
                         nearbyUsers = users.sortedByDescending { it.totalRating }
                             .filter { it.id != userId },
-                        loggedInUser = users.first { it.id == userId }.shortenName()
+                        //loggedInUser = users.first { it.id == userId }.shortenName()
                     )
             }
         }

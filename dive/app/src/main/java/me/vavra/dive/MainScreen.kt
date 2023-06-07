@@ -24,7 +24,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 
 @Composable
-fun MainScreen(state: MainState, onUserSelected: (User) -> Unit) {
+fun MainScreen(nearbyUsers: List<User>, loggedInUser: User, onUserSelected: (User) -> Unit) {
     Column {
         Row(
             modifier = Modifier
@@ -41,13 +41,13 @@ fun MainScreen(state: MainState, onUserSelected: (User) -> Unit) {
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
             Spacer(modifier = Modifier.weight(1f))
-            UserRow(user = state.loggedInUser)
+            UserRow(user = loggedInUser)
         }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             contentPadding = PaddingValues(all = 20.dp)
         ) {
-            items(state.nearbyUsers) {
+            items(nearbyUsers) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

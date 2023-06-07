@@ -2,7 +2,7 @@ package me.vavra.dive
 
 data class MainState(
     val nearbyUsers: List<User> = listOf(),
-    val loggedInUser: User = User("", "", "", "", "", 0.0, "", ""),
+    val loggedInUser: User? = null,
     val rating: Rating? = null
 )
 
