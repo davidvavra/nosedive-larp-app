@@ -1,5 +1,6 @@
 package me.vavra.dive
 
+import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.database.ktx.snapshots
@@ -10,6 +11,10 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 
 object Database {
+    init {
+        Firebase.database.setPersistenceEnabled(true)
+    }
+
     private val reference = Firebase.database.reference
     private val mainRatingFormat =
         DecimalFormat("0.0").apply { this.roundingMode = RoundingMode.DOWN }
@@ -35,6 +40,17 @@ object Database {
                 )
             }
         }
+    }
+
+    fun addRating(from: String, to: String, stars: Int) {
+        reference.child("ratings").push().updateChildren(
+            hashMapOf(
+                "from" to from,
+                "to" to to,
+                "stars" to stars,
+                "createdAt" to ServerValue.TIMESTAMP
+            )
+        )
     }
 
     private fun Double.formatToOnceDecimal(): String {

@@ -37,10 +37,15 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun changeRating(stars: Int) {
         audio.play(R.raw.rate)
+        state = state.copy(rating = state.rating?.copy(stars = stars))
     }
 
     fun sendRating() {
         audio.play(R.raw.swoosh)
+        val rating = state.rating
+        if (rating != null) {
+            Database.addRating(userId, rating.ofUser.id, rating.stars)
+        }
         state = state.copy(rating = null)
     }
 
