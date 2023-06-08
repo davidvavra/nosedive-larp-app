@@ -1,0 +1,70 @@
+//
+// Nearby users
+//
+
+path /nearbyUsers {
+    path /{user_id} {
+      index() {["delegate", "isVisible", "totalRating"]}
+
+      path /name {
+        read() { isSignedIn() }
+      }
+      path /isVisible {
+        read() { isSignedIn() }
+      }
+      path /nameAkuzativ {
+        read() { isSignedIn() }
+      }
+      path /nameVokativ {
+        read() { isSignedIn() }
+      }
+      path /profilePictureUrl {
+        read() { isSignedIn() }
+      }
+      path /totalRating {
+        read() { isSignedIn() }
+      }
+    }
+}
+
+// 
+// Ratings
+//
+
+path /ratings {
+
+  path /{rating_id} is Rating {
+    index() {["from", "to"]}
+    
+    read() { query.orderByChild == "to" && query.equalTo == auth.uid || query.orderByChild == "from" && query.equalTo == auth.uid }
+
+    write() { isInsert(this) && this.from == auth.uid }
+  }
+}
+
+type Rating {
+  from: Id,
+  to: Id,
+  createdAt: Number,
+  stars: Number
+}
+
+//
+// Common
+//
+
+type Id extends String {
+    validate() { hasMaxLength(this, 50) }
+}
+
+hasMaxLength(text, length) {
+    text.length <= length
+}
+
+isSignedIn() {
+    auth != null
+}
+
+isInsert(value) {
+    prior(value) != null && value != null
+}
