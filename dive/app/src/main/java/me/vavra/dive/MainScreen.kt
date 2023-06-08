@@ -2,6 +2,7 @@ package me.vavra.dive
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,9 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +31,12 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 
 @Composable
-fun MainScreen(nearbyUsers: List<User>, loggedInUser: User, onUserSelected: (User) -> Unit) {
+fun MainScreen(
+    nearbyUsers: List<User>,
+    loggedInUser: User,
+    onUserSelected: (User) -> Unit,
+    onLoggedOut: () -> Unit
+) {
     Column {
         Row(
             modifier = Modifier
@@ -41,7 +53,7 @@ fun MainScreen(nearbyUsers: List<User>, loggedInUser: User, onUserSelected: (Use
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
             Spacer(modifier = Modifier.weight(1f))
-            UserRow(user = loggedInUser)
+            LogoutDropDown(loggedInUser, onLoggedOut)
         }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -56,6 +68,28 @@ fun MainScreen(nearbyUsers: List<User>, loggedInUser: User, onUserSelected: (Use
                     UserRow(it)
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun LogoutDropDown(loggedInUser: User, onLoggedOut: () -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    Box() {
+        Row(
+            modifier = Modifier.clickable { expanded = !expanded }
+        ) {
+            UserRow(user = loggedInUser)
+        }
+        DropdownMenu(
+            expanded = expanded,
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Odhlásit") },
+                onClick = onLoggedOut
+            )
         }
     }
 }

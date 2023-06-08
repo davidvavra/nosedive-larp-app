@@ -31,12 +31,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val state = viewModel.state
                     if (state.loggedInUser == null) {
-                        LoginScreen(onLogin = {})
+                        LoginScreen(state.loggingIn, onLogin = { viewModel.login(it) })
                     } else {
                         if (state.rating == null) {
                             MainScreen(state.nearbyUsers, state.loggedInUser, onUserSelected = {
                                 viewModel.selectUser(it)
-                            })
+                            }, onLoggedOut = { viewModel.logOut() })
                         } else {
                             RateScreen(
                                 state.loggedInUser,

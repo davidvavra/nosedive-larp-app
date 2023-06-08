@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -28,6 +29,7 @@ import me.vavra.dive.ui.theme.DiveTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    logingIn: Boolean,
     onLogin: (String) -> Unit,
 ) {
     Box(
@@ -57,11 +59,15 @@ fun LoginScreen(
                 }
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Button(
-                onClick = { onLogin(password.text) },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text(text = "Přihlásit se")
+            if (logingIn) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            } else {
+                Button(
+                    onClick = { onLogin(password.text) },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text(text = "Přihlásit se")
+                }
             }
         }
     }
@@ -71,6 +77,6 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     DiveTheme {
-        LoginScreen(onLogin = {})
+        LoginScreen(false, onLogin = {})
     }
 }

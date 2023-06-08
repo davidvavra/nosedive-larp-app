@@ -6,23 +6,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val app: Application) : AndroidViewModel(app) {
+class MainViewModel(app: Application) : AndroidViewModel(app) {
     var state by mutableStateOf(MainState())
         private set
-    private val userId = "bara"
     private val audio = Audio(app)
 
     init {
         viewModelScope.launch {
-            Database.observeNearbyUsers().collect { users ->
-                state =
-                    MainState(
-                        nearbyUsers = users.sortedByDescending { it.totalRating }
-                            .filter { it.id != userId },
-                        //loggedInUser = users.first { it.id == userId }.shortenName()
-                    )
+            Auth.observeUserId().flatMapLatest { userId ->
+                if (userId == null) {
+                    flowOf(MainState())
+                } else {
+                    Database.observeNearbyUsers().map { users ->
+                        MainState(
+                            nearbyUsers = users.sortedByDescending { it.totalRating }
+                                .filter { it.id != userId },
+                            loggedInUser = users.first { it.id == userId }.shortenName()
+                        )
+                    }
+                }
+            }.collect {
+                state = it
             }
         }
     }
@@ -43,13 +52,26 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     fun sendRating() {
         audio.play(R.raw.swoosh)
         val rating = state.rating
-        if (rating != null) {
-            Database.addRating(userId, rating.ofUser.id, rating.stars)
+        val loggedInUser = state.loggedInUser
+        if (rating != null && loggedInUser != null) {
+            Database.addRating(loggedInUser.id, rating.ofUser.id, rating.stars)
         }
         state = state.copy(rating = null)
     }
 
     fun closeRating() {
         state = state.copy(rating = null)
+    }
+
+    fun login(password: String) {
+        state = state.copy(loggingIn = true)
+        viewModelScope.launch {
+            Auth.login(password)
+            state = state.copy(loggingIn = false)
+        }
+    }
+
+    fun logOut() {
+        Auth.logout()
     }
 }
