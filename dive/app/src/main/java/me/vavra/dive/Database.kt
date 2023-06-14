@@ -1,5 +1,7 @@
 package me.vavra.dive
 
+import android.util.Log
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -51,6 +53,18 @@ object Database {
                 "createdAt" to ServerValue.TIMESTAMP
             )
         )
+    }
+
+    fun updateNotificationsToken(token: String) {
+        val uid = Firebase.auth.uid
+        if (uid != null) {
+            Log.d("FCM token", token)
+            reference.child("userSecrets").child(uid).updateChildren(
+                hashMapOf(
+                    "notificationsToken" to token
+                ) as Map<String, Any>
+            )
+        }
     }
 
     private fun Double.formatToOnceDecimal(): String {

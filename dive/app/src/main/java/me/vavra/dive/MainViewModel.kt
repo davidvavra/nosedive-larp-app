@@ -6,10 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
     var state by mutableStateOf(MainState())
@@ -67,8 +69,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         state = state.copy(loggingIn = true)
         viewModelScope.launch {
             Auth.login(password)
+            updateNotificationsToken()
             state = state.copy(loggingIn = false)
         }
+    }
+
+    private suspend fun updateNotificationsToken() {
+        val token = FirebaseMessaging.getInstance().token.await()
+        Database.updateNotificationsToken(token)
     }
 
     fun logOut() {
