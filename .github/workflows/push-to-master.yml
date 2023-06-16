@@ -16,7 +16,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout
       - name: Setup Node.js environment
-        uses: actions/setup-node  
+        uses: actions/setup-node
         with:
           node-version: 18
       - name: Deploy or die
