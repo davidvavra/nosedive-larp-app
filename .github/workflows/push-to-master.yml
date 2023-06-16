@@ -29,3 +29,9 @@ jobs:
             firebase deploy --token=$FIREBASE_TOKEN 
         env: 
             FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Upload logs
+        if: failed()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs
+          path: /home/runner/.npm/_logs      
