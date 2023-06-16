@@ -3,28 +3,35 @@
 //
 
 path /nearbyUsers {
+    read() { isSignedIn() }
     path /{user_id} {
       index() {["delegate", "isVisible", "totalRating"]}
-
-      path /name {
-        read() { isSignedIn() }
-      }
-      path /isVisible {
-        read() { isSignedIn() }
-      }
-      path /nameAkuzativ {
-        read() { isSignedIn() }
-      }
-      path /nameVokativ {
-        read() { isSignedIn() }
-      }
-      path /profilePictureUrl {
-        read() { isSignedIn() }
-      }
-      path /totalRating {
-        read() { isSignedIn() }
-      }
     }
+}
+
+//
+// User secrets
+//
+
+path /userSecrets {
+    path /{user_id} is Secret {
+      index() {["password"]}
+      read() { isCurrentUser(user_id) }
+      write() { isCurrentUser(user_id) }
+    }
+}
+
+type Secret {
+  password: Password,
+  notificationsToken: Token
+}
+
+type Password extends String {
+    validate() { hasMaxLength(this, 100) }
+}
+
+type Token extends String {
+    validate() { hasMaxLength(this, 255) }
 }
 
 // 
@@ -63,6 +70,10 @@ hasMaxLength(text, length) {
 
 isSignedIn() {
     auth != null
+}
+
+isCurrentUser(user_id) {
+    isSignedIn() && auth.uid == user_id
 }
 
 isInsert(value) {

@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 export async function doLogin(password: string, response: functions.Response) {
-    let delegates = (await admin.database().ref("nearbyUsers").orderByChild("password").equalTo(password).once("value")).val()
+    let delegates = (await admin.database().ref("userSecrets").orderByChild("password").equalTo(password).once("value")).val()
     if (delegates == null) {
         await delay(2000)
         sendResponse(new LoginResponse("", true), response)
