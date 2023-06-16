@@ -1,0 +1,29 @@
+name: Push to master
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: master
+  cancel-in-progress: true
+
+jobs:
+  deploy-or-die:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.4.1   
+        with:
+          node-version: 10.16
+      - name: Deploy or die
+        run: |
+            npm install
+            sudo npm install -g firebase-tools@9.10.0
+            sudo npm install -g firebase-bolt
+            firebase deploy --token=$FIREBASE_TOKEN 
+        env: 
+            FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
