@@ -30,7 +30,7 @@ jobs:
         env: 
             FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Upload logs
-        if: failed()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: logs
