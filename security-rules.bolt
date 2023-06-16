@@ -77,5 +77,5 @@ isCurrentUser(user_id) {
 }
 
 isInsert(value) {
-    prior(value) != null && value != null
+    prior(value) == null && value != null
 }

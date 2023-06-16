@@ -11,7 +11,7 @@ export async function doProcessRating(snap: DataSnapshot) {
     const message = {
         data: {
           fromNameGenitiv: fromNameGenitiv,
-          stars: rating.stars
+          stars: rating.stars as string
         },
         android: androidConfig,
         token: token
