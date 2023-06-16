@@ -52,11 +52,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun sendRating() {
-        audio.play(R.raw.swoosh)
         val rating = state.rating
-        val loggedInUser = state.loggedInUser
-        if (rating != null && loggedInUser != null) {
-            Database.addRating(loggedInUser.id, rating.ofUser.id, rating.stars)
+        if ((rating?.stars ?: 0) > 0) {
+            audio.play(R.raw.swoosh)
+            val loggedInUser = state.loggedInUser
+            if (rating != null && loggedInUser != null) {
+                Database.addRating(loggedInUser.id, rating.ofUser.id, rating.stars)
+            }
         }
         state = state.copy(rating = null)
     }

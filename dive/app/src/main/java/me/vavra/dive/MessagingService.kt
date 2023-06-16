@@ -71,7 +71,8 @@ class MessagingService : FirebaseMessagingService() {
             ) {
                 return
             }
-            notify(Random(42).nextInt(), builder.build())
+            val notificationId = Random.Default.nextInt()
+            notify(notificationId, builder.build())
         }
     }
 }
