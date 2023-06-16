@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlin.random.Random
 
 
 class MessagingService : FirebaseMessagingService() {
@@ -70,7 +71,7 @@ class MessagingService : FirebaseMessagingService() {
             ) {
                 return
             }
-            notify(42, builder.build())
+            notify(Random(42).nextInt(), builder.build())
         }
     }
 }
