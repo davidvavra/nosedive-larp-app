@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -20,10 +21,16 @@ import me.vavra.dive.ui.theme.Nosedive2
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
+    private val ratingOnBackCallback = object: OnBackPressedCallback(enabled = false) {
+        override fun handleOnBackPressed() {
+            viewModel.closeRating()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         askNotificationPermission()
+        onBackPressedDispatcher.addCallback(this, ratingOnBackCallback)
         setContent {
             DiveTheme {
                 Box(
@@ -43,6 +50,7 @@ class MainActivity : ComponentActivity() {
                             MainScreen(state.nearbyUsers, state.loggedInUser, onUserSelected = {
                                 viewModel.selectUser(it)
                             }, onLoggedOut = { viewModel.logOut() })
+                            ratingOnBackCallback.isEnabled = false
                         } else {
                             RateScreen(
                                 state.loggedInUser,
@@ -50,6 +58,7 @@ class MainActivity : ComponentActivity() {
                                 onRatingChanged = { viewModel.changeRating(it) },
                                 onClose = { viewModel.closeRating() },
                                 onSend = { viewModel.sendRating() })
+                            ratingOnBackCallback.isEnabled = true
                         }
                     }
                 }

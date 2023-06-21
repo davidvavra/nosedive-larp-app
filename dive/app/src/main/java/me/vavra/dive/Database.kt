@@ -9,6 +9,7 @@ import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import me.vavra.dive.Database.formatToOnceDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -18,10 +19,7 @@ object Database {
     }
 
     private val reference = Firebase.database.reference
-    private val mainRatingFormat =
-        DecimalFormat("0.0").apply { this.roundingMode = RoundingMode.DOWN }
-    private val detailedRatingFormat =
-        DecimalFormat("0.000").apply { this.roundingMode = RoundingMode.HALF_UP }
+    private val ratingFormat = DecimalFormat("0.000").apply { this.roundingMode = RoundingMode.HALF_UP }
 
     fun observeNearbyUsers(): Flow<List<User>> {
         val query = reference.child("nearbyUsers").orderByChild("isVisible").equalTo(true)
@@ -68,12 +66,12 @@ object Database {
     }
 
     private fun Double.formatToOnceDecimal(): String {
-        return mainRatingFormat.format(this)
+        val formatted = ratingFormat.format(this)
+        return formatted.substring(0, 3)
     }
 
     private fun Double.extractThirdAndFourthDecimal(): String {
-        val mainRating = mainRatingFormat.format(this)
-        val detailedRating = detailedRatingFormat.format(this)
-        return detailedRating.replace(mainRating, "")
+        val formatted = ratingFormat.format(this)
+        return formatted.substring(3, 5)
     }
 }
