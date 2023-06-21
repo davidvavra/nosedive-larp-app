@@ -17,8 +17,9 @@ export async function doProcessRating(snap: DataSnapshot) {
   await admin.database().ref("nearbyUsers/" + rating.to).transaction(
     ratedUser => {
       if (ratedUser == null) return null
-      ratedUser.ratingCount = ratedUser.ratingCount + weight
-      raterUser.totalRating = (ratedUser.totalRating * ratedUser.ratingCount + rating.stars * weight) / raterUser.ratingCount
+      const newRatingCount = ratedUser.ratingCount + weight
+      ratedUser.totalRating = (ratedUser.totalRating * ratedUser.ratingCount + rating.stars * weight) / newRatingCount
+      ratedUser.ratingCount = newRatingCount
       return ratedUser
     }
   )
