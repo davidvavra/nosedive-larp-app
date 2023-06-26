@@ -1,0 +1,16 @@
+<div class="container">
+  <h2>Nová CP zpráva</h2>
+  <form (ngSubmit)="onSubmit()" #slackForm="ngForm">
+    <div class="form-group">
+      <label for="user">Uživatel</label>
+      <select class="form-control" id="user" required [(ngModel)]="model.user" name="user">
+        <option *ngFor="let user of users | async" [ngValue]="user">{{user.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="text">Text</label>
+      <textarea class="form-control" id="text" required [(ngModel)]="model.text" name="text"  rows="5"></textarea>
+    </div>
+    <button type="submit" [disabled]="!slackForm.form.valid" class="btn btn-success">Poslat</button>
+  </form>
+</div>

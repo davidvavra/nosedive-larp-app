@@ -1,0 +1,9 @@
+{
+  "hosting": [
+    {
+      "target": "admin",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

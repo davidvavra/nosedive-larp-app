@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "nosedive-larp": {
+      "hosting": {
+        "admin": [
+          "nosedive-larp"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "nosedive-larp"
+  }
+}

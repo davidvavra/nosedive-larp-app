@@ -3,7 +3,7 @@
 //
 
 path /nearbyUsers {
-    read() { isSignedIn() }
+    read() { true }
     path /{user_id} {
       index() {["delegate", "isVisible", "totalRating"]}
     }
