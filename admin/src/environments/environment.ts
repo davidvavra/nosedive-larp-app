@@ -9,4 +9,7 @@ export const environment = {
     messagingSenderId: '110661909115',
     measurementId: 'G-7R4TLS3JQM',
   },
+  slack: {
+    botToken: 'xoxb-5482843366724-5490041629285-i2nR5bYgt4HZxsC780Kg4NTv'
+  }
 };
