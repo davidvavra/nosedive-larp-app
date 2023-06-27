@@ -22,7 +22,7 @@ jobs:
       - name: Deploy admin
         run: |
             cd admin
-            sed -i 's/bot_token_from_ci/$SLACK_BOT_TOKEN/' src/environments/environment.ts
+            sed -i "s/bot_token_from_ci/$SLACK_BOT_TOKEN/" src/environments/environment.ts
             npm install
             sudo npm install -g firebase-tools
             sudo npm install -g @angular/cli
