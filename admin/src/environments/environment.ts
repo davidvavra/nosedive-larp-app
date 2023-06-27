@@ -10,6 +10,6 @@ export const environment = {
     measurementId: 'G-7R4TLS3JQM',
   },
   slack: {
-    botToken: 'xoxb-5482843366724-5490041629285-CKVzliOQsUDZkHexsp8RrIbq'
+    botToken: 'xoxb-5482843366724-5490041629285-ZQe9VngyHxsLo9LgBYRMDLbV'
   }
 };
