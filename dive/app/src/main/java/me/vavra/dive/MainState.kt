@@ -15,7 +15,8 @@ data class User(
     val profilePictureUrl: String,
     val totalRating: Double,
     val mainRating: String,
-    val detailedRating: String
+    val detailedRating: String,
+    val isVisible: Boolean
 )
 
 data class Rating(

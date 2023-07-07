@@ -27,7 +27,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     Database.observeNearbyUsers().map { users ->
                         MainState(
                             nearbyUsers = users.sortedByDescending { it.totalRating }
-                                .filter { it.id != userId },
+                                .filter { it.isVisible && it.id != userId },
                             loggedInUser = users.first { it.id == userId }.shortenName()
                         )
                     }

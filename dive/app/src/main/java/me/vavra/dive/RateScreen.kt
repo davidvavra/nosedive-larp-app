@@ -99,7 +99,7 @@ fun RateScreen(
 @Composable
 private fun RateScreenPreview() {
     RateScreen(
-        loggedInUser = User("", "", "Báro", "", "", 0.0, "", ""),
+        loggedInUser = User("", "", "Báro", "", "", 0.0, "", "", true),
         rating = Rating(
             User(
                 "",
@@ -109,7 +109,7 @@ private fun RateScreenPreview() {
                 "https://scontent-prg1-1.xx.fbcdn.net/v/t31.18172-8/15000766_10153993482001156_1656422130253963216_o.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=RLpldLzCaSwAX8DDndz&_nc_oc=AQmIEdxTMsfYBV7SKeP9Morcrh-oKmZxDcVBB-uHW149aZF8j4ipEj3VHB4YyB3UsTw&_nc_ht=scontent-prg1-1.xx&oh=00_AfBQASctI3P_M0E39kkUjVwA9ABqaZGXTS8DAkdKCX_e5A&oe=64A5A9A9",
                 0.0,
                 "",
-                ""
+                "", true
             )
         ), {}, {}, {}
     )

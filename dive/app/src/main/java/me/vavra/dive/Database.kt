@@ -9,7 +9,6 @@ import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import me.vavra.dive.Database.formatToOnceDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -22,21 +21,22 @@ object Database {
     private val ratingFormat = DecimalFormat("0.000").apply { this.roundingMode = RoundingMode.HALF_UP }
 
     fun observeNearbyUsers(): Flow<List<User>> {
-        val query = reference.child("nearbyUsers").orderByChild("isVisible").equalTo(true)
+        val query = reference.child("nearbyUsers")
         return query.snapshots.map { list ->
             list.children.map { snapshot ->
-                val totalRating = checkNotNull(snapshot.child("totalRating").getValue<Double>())
+                val totalRating = snapshot.child("totalRating").getValue<Double>() ?: 0.0
                 User(
                     id = checkNotNull(snapshot.key),
                     name = checkNotNull(snapshot.child("name").getValue<String>()),
-                    nameVokativ = checkNotNull(snapshot.child("nameVokativ").getValue<String>()),
-                    nameAkuzativ = checkNotNull(snapshot.child("nameAkuzativ").getValue<String>()),
+                    nameVokativ = snapshot.child("nameVokativ").getValue<String>() ?: "",
+                    nameAkuzativ = snapshot.child("nameAkuzativ").getValue<String>() ?: "",
                     profilePictureUrl = checkNotNull(
                         snapshot.child("profilePictureUrl").getValue<String>()
                     ),
                     totalRating = totalRating,
                     mainRating = totalRating.formatToOnceDecimal(),
-                    detailedRating = totalRating.extractThirdAndFourthDecimal()
+                    detailedRating = totalRating.extractThirdAndFourthDecimal(),
+                    isVisible = checkNotNull(snapshot.child("isVisible").getValue<Boolean>())
                 )
             }
         }
