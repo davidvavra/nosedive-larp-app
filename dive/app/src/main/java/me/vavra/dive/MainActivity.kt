@@ -21,7 +21,7 @@ import me.vavra.dive.ui.theme.Nosedive2
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
-    private val ratingOnBackCallback = object: OnBackPressedCallback(enabled = false) {
+    private val ratingOnBackCallback = object : OnBackPressedCallback(enabled = false) {
         override fun handleOnBackPressed() {
             viewModel.closeRating()
         }
@@ -52,12 +52,20 @@ class MainActivity : ComponentActivity() {
                             }, onLoggedOut = { viewModel.logOut() })
                             ratingOnBackCallback.isEnabled = false
                         } else {
-                            RateScreen(
-                                state.loggedInUser,
-                                state.rating,
-                                onRatingChanged = { viewModel.changeRating(it) },
-                                onClose = { viewModel.closeRating() },
-                                onSend = { viewModel.sendRating() })
+                            if (state.rating.success) {
+                                RatedScreen(state.rating, onClose = { viewModel.closeRating() })
+                            } else if (state.rating.fail) {
+                                RatingFailedScreen(
+                                    state.rating,
+                                    onClose = { viewModel.closeRating() })
+                            } else {
+                                RateScreen(
+                                    state.loggedInUser,
+                                    state.rating,
+                                    onRatingChanged = { viewModel.changeRating(it) },
+                                    onClose = { viewModel.closeRating() },
+                                    onSend = { viewModel.sendRating() })
+                            }
                             ratingOnBackCallback.isEnabled = true
                         }
                     }

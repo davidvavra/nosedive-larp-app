@@ -12,6 +12,7 @@ data class User(
     val name: String,
     val nameVokativ: String,
     val nameAkuzativ: String,
+    val nameGenitiv: String,
     val profilePictureUrl: String,
     val totalRating: Double,
     val mainRating: String,
@@ -21,5 +22,8 @@ data class User(
 
 data class Rating(
     val ofUser: User,
-    val stars: Int = 0
+    val stars: Int = 0,
+    val sent: Boolean = false,
+    val success: Boolean = false,
+    val fail: Boolean = false
 )

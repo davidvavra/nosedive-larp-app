@@ -29,12 +29,9 @@ import com.gowtham.ratingbar.RatingBarStyle
 import me.vavra.dive.ui.theme.Rate
 
 @Composable
-fun RateScreen(
-    loggedInUser: User,
+fun RatedScreen(
     rating: Rating,
-    onRatingChanged: (Int) -> Unit,
-    onClose: () -> Unit,
-    onSend: () -> Unit
+    onClose: () -> Unit
 ) {
     var swipeOffset by remember { mutableStateOf(0f) }
     Box(modifier = Modifier
@@ -46,21 +43,21 @@ fun RateScreen(
                 if (swipeOffset > 150) {
                     onClose()
                 } else if (swipeOffset < -150) {
-                    onSend()
+                    onClose()
                 }
             }
 
         }) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
-                loggedInUser.nameVokativ + ",",
-                modifier = Modifier.align(CenterHorizontally),
-                style = MaterialTheme.typography.headlineLarge
-            )
-            Text(
-                "zde můžeš ohodnotit",
+                "Hodnocení",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.align(CenterHorizontally)
+            )
+            Text(
+                rating.ofUser.nameGenitiv,
+                modifier = Modifier.align(CenterHorizontally),
+                style = MaterialTheme.typography.displayMedium
             )
             Spacer(modifier = Modifier.height(32.dp))
             AsyncImage(
@@ -74,21 +71,20 @@ fun RateScreen(
                     .size(200.dp)
                     .align(CenterHorizontally)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(26.dp))
             Text(
-                rating.ofUser.nameAkuzativ,
-                modifier = Modifier.align(CenterHorizontally),
-                style = MaterialTheme.typography.displayMedium
+                "odesláno",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.align(CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(32.dp))
-            var stars: Float by remember { mutableStateOf(0f) }
             RatingBar(
-                value = stars,
+                value = rating.stars.toFloat(),
                 style = RatingBarStyle.Stroke(activeColor = Rate, width = 3f),
-                onValueChange = { stars = it },
+                onValueChange = {  },
                 size = 46.dp,
                 spaceBetween = 6.dp,
-                onRatingChanged = { onRatingChanged(it.toInt()) },
+                onRatingChanged = {  },
                 modifier = Modifier.align(CenterHorizontally)
             )
         }
@@ -97,21 +93,20 @@ fun RateScreen(
 
 @Preview
 @Composable
-private fun RateScreenPreview() {
-    RateScreen(
-        loggedInUser = User("", "", "Báro", "", "", "", 0.0, "", "", true),
+private fun RatedScreenPreview() {
+    RatedScreen(
         rating = Rating(
             User(
                 "",
                 "",
                 "",
                 "Davida",
-                "",
+                nameGenitiv = "Davida",
                 "https://firebasestorage.googleapis.com/v0/b/nosedive-larp.appspot.com/o/profile_pics%2FAuditor%20Va%CC%81clav%20Svoboda.jpg?alt=media&token=11df83cb-200c-4c85-a9c5-f7921d401412",
                 0.0,
                 "",
                 "", true
             )
-        ), {}, {}, {}
+        ), {}
     )
 }

@@ -1,6 +1,7 @@
 package me.vavra.dive
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,8 +13,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import me.vavra.dive.Database.updateNotificationsToken
 
-class MainViewModel(app: Application) : AndroidViewModel(app) {
+class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     var state by mutableStateOf(MainState())
         private set
     private val audio = Audio(app)
@@ -53,14 +55,26 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun sendRating() {
         val rating = state.rating
-        if ((rating?.stars ?: 0) > 0) {
-            audio.play(R.raw.swoosh)
+        val sent = rating?.sent ?: false
+        if ((rating?.stars ?: 0) > 0 && !sent) {
             val loggedInUser = state.loggedInUser
             if (rating != null && loggedInUser != null) {
-                Database.addRating(loggedInUser.id, rating.ofUser.id, rating.stars)
+                Database.addRating(
+                    app,
+                    loggedInUser.id,
+                    rating.ofUser.id,
+                    rating.stars,
+                    onSuccess = {
+                        audio.play(R.raw.swoosh)
+                        state = state.copy(rating = rating.copy(success = true))
+                    },
+                    onFail = {
+                        audio.play(R.raw.error)
+                        state = state.copy(rating = rating.copy(fail = true))
+                    })
+                state = state.copy(rating = state.rating?.copy(sent = true))
             }
         }
-        state = state.copy(rating = null)
     }
 
     fun closeRating() {
