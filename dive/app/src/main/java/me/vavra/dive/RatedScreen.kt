@@ -80,7 +80,7 @@ fun RatedScreen(
             Spacer(modifier = Modifier.height(32.dp))
             RatingBar(
                 value = rating.stars.toFloat(),
-                style = RatingBarStyle.Stroke(activeColor = Rate, width = 3f),
+                style = RatingBarStyle.Stroke(activeColor = MaterialTheme.colorScheme.tertiary, width = 3f),
                 onValueChange = {  },
                 size = 46.dp,
                 spaceBetween = 6.dp,
