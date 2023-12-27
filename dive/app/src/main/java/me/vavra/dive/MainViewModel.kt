@@ -22,10 +22,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             Auth.observeUserId().flatMapLatest { userId ->
                 if (userId == null) {
-                    flowOf(MainState())
+                    flowOf(state.copy(loggedInUser = null))
                 } else {
                     Database.observeNearbyUsers().map { users ->
-                        MainState(
+                        state.copy(
                             nearbyUsers = users.sortedByDescending { it.totalRating }
                                 .filter { it.isVisible && it.id != userId },
                             loggedInUser = users.first { it.id == userId }.shortenName()
