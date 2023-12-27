@@ -4,7 +4,7 @@
     <div class="form-group">
       <label for="user">Uživatel</label>
       <select class="form-control" id="user" required [(ngModel)]="model.user" name="user">
-        <option *ngFor="let user of users | async" [ngValue]="user">{{user.name}}</option>
+        <option *ngFor="let user of users" [ngValue]="user">{{user.name}}</option>
       </select>
     </div>
     <div class="form-group">
