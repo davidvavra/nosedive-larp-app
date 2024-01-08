@@ -28,7 +28,10 @@ export class AppComponent {
   }
 
   onSubmit() {
-    this.http.post("https://slack.com/api/chat.postMessage?channel=" + this.model.channel.id + "&icon_url=" + encodeURI(this.model.user.profilePictureUrl) + "&text=" + encodeURI(this.model.text) + "&username=" + this.model.user.name, "token=" + environment.slack.botToken, { headers: { "Content-Type": "application/x-www-form-urlencoded" } }).subscribe(response => {
+    let url = "https://slack.com/api/chat.postMessage?channel=" + this.model.channel.id + "&icon_url=" + encodeURI(this.model.user.profilePictureUrl) + "&text=" + encodeURI(this.model.text) + "&username=" + this.model.user.name
+    console.log("url="+url)
+    console.log("token="+environment.slack.botToken)
+    this.http.post(url, "token=" + environment.slack.botToken, { headers: { "Content-Type": "application/x-www-form-urlencoded" } }).subscribe(response => {
       console.log(JSON.stringify(response))
     })
   }
