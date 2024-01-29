@@ -32,6 +32,7 @@ export class AppComponent {
     console.log("url="+url)
     this.http.post(url, "token=" + environment.slack.botToken, { headers: { "Content-Type": "application/x-www-form-urlencoded" } }).subscribe(response => {
       console.log(JSON.stringify(response))
+      this.model.text = ""
     })
   }
 
