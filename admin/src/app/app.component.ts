@@ -14,16 +14,21 @@ import { environment } from 'src/environments/environment';
 export class AppComponent {
   title = 'admin';
   private database: Database = inject(Database);
-  users: User[] = [];
+  npcs: User[] = [];
+  players: User[] = [];
   channels: Observable<Channel[]>;
-  model = new SlackMessage(new User("", "", ""), new Channel("", ""), "")
+  model = new SlackMessage(new User("", "", ""), new Channel("", ""), "", new User("", "", ""), new User("", "", ""), new User("", "", ""))
 
   constructor(private http: HttpClient) {
     listVal(query(ref(this.database, "nearbyUsers")), { keyField: "id" }).subscribe(users => {
       if (users != null) {
-        let cpUsers = (users as User[]).filter(user => user.id.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name))
-        if (!this.isSame(cpUsers, this.users)) {
-          this.users = cpUsers
+        let npcUsers = (users as User[]).filter(user => user.id.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name))
+        let playerUsers = (users as User[]).filter(user => !user.id.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name))
+        if (!this.isSame(npcUsers, this.npcs)) {
+          this.npcs = npcUsers
+        }
+        if (!this.isSame(playerUsers, this.players)) {
+          this.players = playerUsers
         }
       }
     })
@@ -50,7 +55,10 @@ export class SlackMessage {
   constructor(
     public user: User,
     public channel: Channel,
-    public text: string
+    public text: string,
+    public reporter1: User,
+    public reporter2: User,
+    public victim: User
   ) { }
 
 }

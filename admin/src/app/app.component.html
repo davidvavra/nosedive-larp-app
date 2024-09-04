@@ -4,7 +4,7 @@
     <div class="form-group">
       <label for="user">Uživatel</label>
       <select class="form-control" id="user" required [(ngModel)]="model.user" name="user">
-        <option *ngFor="let user of users" [ngValue]="user">{{user.name}}</option>
+        <option *ngFor="let user of npcs" [ngValue]="user">{{user.name}}</option>
       </select>
     </div>
     <div class="form-group">
@@ -18,5 +18,39 @@
       <textarea class="form-control" id="text" required [(ngModel)]="model.text" name="text"  rows="5"></textarea>
     </div>
     <button type="submit" [disabled]="!slackForm.form.valid" class="btn btn-success">Poslat</button>
+  </form>
+  <h2>Reportování</h2>
+  <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
+    <div class="form-group">
+      <label for="reporter1">Práskač 1</label>
+      <select class="form-control" id="reporter1" required [(ngModel)]="model.reporter1" name="reporter1">
+        <option *ngFor="let user of players" [ngValue]="user">{{user.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="reporter2">Práskač 2</label>
+      <select class="form-control" id="reporter2" [(ngModel)]="model.reporter2" name="reporter2">
+        <option *ngFor="let user of players" [ngValue]="user">{{user.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="victim">Oběť</label>
+      <select class="form-control" id="user" required [(ngModel)]="model.victim" name="victim">
+        <option *ngFor="let user of players" [ngValue]="user">{{user.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="penalty">O kolik potrestat oběť</label><br />
+      <input type="text" value="0.1" id="penalty" name="penalty" required/>
+    </div>
+    <div class="form-group">
+      <label for="reward">O kolik odměnit práskače</label><br />
+      <input type="text" value="0.1" id="reward" name="reward" required/>
+    </div>
+    <div class="form-group">
+      <label for="reason">Důvod</label><br />
+      <input type="text" value="" id="reason" name="reason" required/>
+    </div>
+    <button type="submit" [disabled]="!reportForm.form.valid" class="btn btn-success">Prásk!</button><br /><br />
   </form>
 </div>
