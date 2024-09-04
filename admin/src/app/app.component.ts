@@ -16,12 +16,15 @@ export class AppComponent {
   private database: Database = inject(Database);
   users: User[] = [];
   channels: Observable<Channel[]>;
-  model = new SlackMessage(new User("", ""), new Channel("", ""), "")
+  model = new SlackMessage(new User("", "", ""), new Channel("", ""), "")
 
   constructor(private http: HttpClient) {
-    listVal(query(ref(this.database, "nearbyUsers"))).subscribe(users => {
-      if (users != null && !this.isSame(users as User[], this.users)) {
-        this.users = users as User[]
+    listVal(query(ref(this.database, "nearbyUsers")), { keyField: "id" }).subscribe(users => {
+      if (users != null) {
+        let cpUsers = (users as User[]).filter(user => user.id.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name))
+        if (!this.isSame(cpUsers, this.users)) {
+          this.users = cpUsers
+        }
       }
     })
     this.channels = http.post<Channels>("https://slack.com/api/conversations.list?types=public_channel%2C%20private_channel", "token=" + environment.slack.botToken, { headers: { "Content-Type": "application/x-www-form-urlencoded" } }).pipe(map(channels => channels.channels))
@@ -29,7 +32,7 @@ export class AppComponent {
 
   onSubmit() {
     let url = "https://slack.com/api/chat.postMessage?channel=" + this.model.channel.id + "&icon_url=" + encodeURIComponent(this.model.user.profilePictureUrl) + "&text=" + encodeURIComponent(this.model.text) + "&username=" + this.model.user.name
-    console.log("url="+url)
+    console.log("url=" + url)
     this.http.post(url, "token=" + environment.slack.botToken, { headers: { "Content-Type": "application/x-www-form-urlencoded" } }).subscribe(response => {
       console.log(JSON.stringify(response))
       this.model.text = ""
@@ -38,7 +41,7 @@ export class AppComponent {
 
   isSame(first: User[], second: User[]): Boolean {
     return first.length === second.length &&
-    first.every((element, index) => element.name === second[index].name && element.profilePictureUrl === second[index].profilePictureUrl);
+      first.every((element, index) => element.name === second[index].name && element.profilePictureUrl === second[index].profilePictureUrl);
   }
 }
 
@@ -55,6 +58,7 @@ export class SlackMessage {
 export class User {
 
   constructor(
+    public id: string,
     public name: string,
     public profilePictureUrl: string
   ) { }
