@@ -51,7 +51,10 @@ export class AppComponent {
       "createdAt": serverTimestamp()
     })
     let feedChannelId = "C06GTM5JJJC" // TODO: change every run!
-    let message = "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživateli " + this.state.reporter1 + " za reportování, odměna je zvýšení hodnocení o " + this.state.reward
+    let message = (this.state.reporter2 == NO_USER) ?
+      "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživateli " + this.state.reporter1.name + " za reportování, za odměnu bylo zvýšeno hodnocení o " + this.state.reward
+    :
+      "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživatelům " + this.state.reporter1.name + " a " + this.state.reporter2.name + "za reportování, za odměnu jim bylo zvýšeno hodnocení o " + this.state.reward / 2
     this.sendSlackMessage(new User("_dive_safety", "Dive Safety", "https://firebasestorage.googleapis.com/v0/b/nosedive-larp.appspot.com/o/profile_pics%2FDive%20Safety.png?alt=media&token=1003e7ad-28fe-4093-b0f2-6cfc96bd2ee9"), feedChannelId, message)
   }
 
