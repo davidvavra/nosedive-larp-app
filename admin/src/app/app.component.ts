@@ -37,12 +37,7 @@ export class AppComponent {
   }
 
   onMessageSubmit() {
-    let url = "https://slack.com/api/chat.postMessage?channel=" + this.state.channel.id + "&icon_url=" + encodeURIComponent(this.state.user.profilePictureUrl) + "&text=" + encodeURIComponent(this.state.text) + "&username=" + this.state.user.name
-    console.log("url=" + url)
-    this.http.post(url, "token=" + environment.slack.botToken, { headers: { "Content-Type": "application/x-www-form-urlencoded" } }).subscribe(response => {
-      console.log(JSON.stringify(response))
-      this.state.text = ""
-    })
+    this.sendSlackMessage(this.state.user, this.state.channel.id, this.state.text)
   }
 
   onReportSubmit() {
@@ -55,11 +50,23 @@ export class AppComponent {
       "reason": this.state.reason,
       "createdAt": serverTimestamp()
     })
+    let feedChannelId = "C06GTM5JJJC" // TODO: change every run!
+    let message = "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživateli " + this.state.reporter1 + " za reportování, odměna je zvýšení hodnocení o " + this.state.reward
+    this.sendSlackMessage(new User("_dive_safety", "Dive Safety", "https://firebasestorage.googleapis.com/v0/b/nosedive-larp.appspot.com/o/profile_pics%2FDive%20Safety.png?alt=media&token=1003e7ad-28fe-4093-b0f2-6cfc96bd2ee9"), feedChannelId, message)
   }
 
   isSame(first: User[], second: User[]): Boolean {
     return first.length === second.length &&
       first.every((element, index) => element.name === second[index].name && element.profilePictureUrl === second[index].profilePictureUrl);
+  }
+
+  sendSlackMessage(user: User, channelId: string, message: string) {
+    let url = "https://slack.com/api/chat.postMessage?channel=" + channelId + "&icon_url=" + encodeURIComponent(user.profilePictureUrl) + "&text=" + encodeURIComponent(message) + "&username=" + user.name
+    console.log("url=" + url)
+    this.http.post(url, "token=" + environment.slack.botToken, { headers: { "Content-Type": "application/x-www-form-urlencoded" } }).subscribe(response => {
+      console.log(JSON.stringify(response))
+      this.state.text = ""
+    })
   }
 }
 
