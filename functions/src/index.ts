@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { doLogin } from './login';
-import { doProcessRating } from './database';
+import { doProcessRating, doProcessReport } from './database';
 
 admin.initializeApp({
     databaseURL: "https://nosedive-larp-default-rtdb.europe-west1.firebasedatabase.app"
