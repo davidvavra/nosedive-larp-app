@@ -14,3 +14,7 @@ export let login = functions.region('europe-west1').https.onRequest(async (reque
 export let processRating = functions.region('europe-west1').database.ref("ratings/{ratingId}").onCreate(async (snap, context) => {
     await doProcessRating(snap)
 })
+
+export let processReport = functions.region('europe-west1').database.ref("reports/{reportId}").onCreate(async (snap, context) => {
+    await doProcessReport(snap)
+})

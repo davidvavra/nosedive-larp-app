@@ -39,3 +39,34 @@ export async function doProcessRating(snap: DataSnapshot) {
   console.log("message=" + JSON.stringify(message))
   await admin.messaging().send(message)
 }
+
+export async function doProcessReport(snap: DataSnapshot) {
+  const report = snap.val();
+  await admin.database().ref("nearbyUsers/" + report.victim).transaction(
+    victimUser => {
+      victimUser.totalRating = victimUser.totalRating - report.penalty
+      return victimUser
+    }
+  )
+  if (report.reporter2 == "unknown") {
+    await admin.database().ref("nearbyUsers/" + report.reporter1).transaction(
+      user => {
+        user.totalRating = user.totalRating + report.reward
+        return user
+      }
+    )
+  } else {
+    await admin.database().ref("nearbyUsers/" + report.reporter1).transaction(
+      user => {
+        user.totalRating = user.totalRating + report.reward / 2
+        return user
+      }
+    )
+    await admin.database().ref("nearbyUsers/" + report.reporter2).transaction(
+      user => {
+        user.totalRating = user.totalRating + report.reward / 2
+        return user
+      }
+    )
+  }
+}
