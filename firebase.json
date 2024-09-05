@@ -15,6 +15,6 @@
     }
   ],
   "database": {
-    "rules": "security-rules.bolt"
+    "rules": "security-rules.json"
   }
 }

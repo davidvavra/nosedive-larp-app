@@ -23,6 +23,7 @@ jobs:
         run: |
             sudo npm install -g firebase-tools@^13
             sudo npm install -g firebase-bolt
+            firebase-bolt < security-rules.bolt
             firebase deploy --token=$FIREBASE_TOKEN --only database
         env: 
             FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}        
