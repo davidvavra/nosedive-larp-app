@@ -24,7 +24,7 @@ export class AppComponent {
       if (users != null) {
         users.push(NO_USER)
         let npcUsers = (users as User[]).filter(user => user.id.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name))
-        let playerUsers = (users as User[]).filter(user => !user.id.startsWith("_")).sort((a, b) => a.name.localeCompare(b.name))
+        let playerUsers = (users as User[]).filter(user => !user.id.startsWith("_") || LIVE_NPC_IDS.includes(user.id)).sort((a, b) => a.name.localeCompare(b.name))
         if (!this.isSame(npcUsers, this.npcs)) {
           this.npcs = npcUsers
         }
@@ -54,7 +54,7 @@ export class AppComponent {
     let message = (this.state.reporter2 == NO_USER) ?
       "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživateli " + this.state.reporter1.name + " za reportování, za odměnu bylo zvýšeno hodnocení o " + this.state.reward
     :
-      "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživatelům " + this.state.reporter1.name + " a " + this.state.reporter2.name + "za reportování, za odměnu jim bylo zvýšeno hodnocení o " + this.state.reward / 2
+      "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživatelům " + this.state.reporter1.name + " a " + this.state.reporter2.name + " za reportování, za odměnu jim bylo zvýšeno hodnocení o " + this.state.reward / 2
     this.sendSlackMessage(new User("_dive_safety", "Dive Safety", "https://firebasestorage.googleapis.com/v0/b/nosedive-larp.appspot.com/o/profile_pics%2FDive%20Safety.png?alt=media&token=1003e7ad-28fe-4093-b0f2-6cfc96bd2ee9"), feedChannelId, message)
   }
 
@@ -100,6 +100,7 @@ export class User {
 }
 
 let NO_USER = new User("unknown", "-- Nikdo --", "")
+let LIVE_NPC_IDS = ["_bara", "_david", "_vaclav", "_radka"]
 
 export interface Channels {
   channels: Channel[]
