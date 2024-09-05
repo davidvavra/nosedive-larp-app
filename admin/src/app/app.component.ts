@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Injectable, inject } from '@angular/core';
-import { Database, listVal, query, ref, push } from '@angular/fire/database';
+import { Database, listVal, query, ref, push, serverTimestamp } from '@angular/fire/database';
 import { map } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
@@ -52,7 +52,8 @@ export class AppComponent {
       "victim": this.state.victim.id,
       "penalty": this.state.penalty,
       "reward": this.state.reward,
-      "reason": this.state.reason
+      "reason": this.state.reason,
+      "createdAt": serverTimestamp()
     })
   }
 
