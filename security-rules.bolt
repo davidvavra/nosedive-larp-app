@@ -61,8 +61,10 @@ type Rating {
 //
 
 path /reports {
-  read() { true }
-  write() { true }
+  path /{report_id} {
+    read() { true }
+    write() { true }
+  }
 }
 
 //

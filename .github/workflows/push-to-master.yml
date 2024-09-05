@@ -36,7 +36,7 @@ jobs:
             cd functions
             npm install
             cd ..
-            firebase deploy --token=$FIREBASE_TOKEN --only functions
+            firebase deploy --token=$FIREBASE_TOKEN
         env: 
             FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}            
       - name: Upload logs
