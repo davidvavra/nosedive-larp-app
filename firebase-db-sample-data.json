@@ -15,5 +15,16 @@
       "createdAt": 21312321321,
       "stars": 4
     }
+  },
+  "reports": {
+    "report_id_1": {
+      "reporter1": "mirek",
+      "reporter2": "unknown",
+      "victim": "lenka",
+      "createdAt": 21312321321,
+      "reward": 0.1,
+      "penalty": 0.1,
+      "reason": "Násilí"
+    }
   }
 }

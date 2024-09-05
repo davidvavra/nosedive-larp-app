@@ -1,55 +1,55 @@
 <div class="container">
   <h2>Nová CP zpráva</h2>
-  <form (ngSubmit)="onSubmit()" #slackForm="ngForm">
+  <form (ngSubmit)="onMessageSubmit()" #slackForm="ngForm">
     <div class="form-group">
       <label for="user">Uživatel</label>
-      <select class="form-control" id="user" required [(ngModel)]="model.user" name="user">
+      <select class="form-control" id="user" required [(ngModel)]="state.user" name="user">
         <option *ngFor="let user of npcs" [ngValue]="user">{{user.name}}</option>
       </select>
     </div>
     <div class="form-group">
       <label for="channel">Kanál</label>
-      <select class="form-control" id="channel" required [(ngModel)]="model.channel" name="channel">
+      <select class="form-control" id="channel" required [(ngModel)]="state.channel" name="channel">
         <option *ngFor="let channel of channels | async" [ngValue]="channel">#{{channel.name}}</option>
       </select>
     </div>
     <div class="form-group">
       <label for="text">Text</label>
-      <textarea class="form-control" id="text" required [(ngModel)]="model.text" name="text"  rows="5"></textarea>
+      <textarea class="form-control" id="text" required [(ngModel)]="state.text" name="text"  rows="5"></textarea>
     </div>
     <button type="submit" [disabled]="!slackForm.form.valid" class="btn btn-success">Poslat</button>
   </form>
   <h2>Reportování</h2>
-  <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
+  <form (ngSubmit)="onReportSubmit()" #reportForm="ngForm">
     <div class="form-group">
       <label for="reporter1">Práskač 1</label>
-      <select class="form-control" id="reporter1" required [(ngModel)]="model.reporter1" name="reporter1">
+      <select class="form-control" id="reporter1" required [(ngModel)]="state.reporter1" name="reporter1">
         <option *ngFor="let user of players" [ngValue]="user">{{user.name}}</option>
       </select>
     </div>
     <div class="form-group">
       <label for="reporter2">Práskač 2</label>
-      <select class="form-control" id="reporter2" [(ngModel)]="model.reporter2" name="reporter2">
+      <select class="form-control" id="reporter2" [(ngModel)]="state.reporter2" name="reporter2">
         <option *ngFor="let user of players" [ngValue]="user">{{user.name}}</option>
       </select>
     </div>
     <div class="form-group">
       <label for="victim">Oběť</label>
-      <select class="form-control" id="user" required [(ngModel)]="model.victim" name="victim">
+      <select class="form-control" id="user" required [(ngModel)]="state.victim" name="victim">
         <option *ngFor="let user of players" [ngValue]="user">{{user.name}}</option>
       </select>
     </div>
     <div class="form-group">
       <label for="penalty">O kolik potrestat oběť</label><br />
-      <input type="text" value="0.1" id="penalty" name="penalty" required/>
+      <input type="number" [(ngModel)]="state.penalty" id="penalty" name="penalty" required/>
     </div>
     <div class="form-group">
       <label for="reward">O kolik odměnit práskače</label><br />
-      <input type="text" value="0.1" id="reward" name="reward" required/>
+      <input type="number" [(ngModel)]="state.reward" id="reward" name="reward" required/>
     </div>
     <div class="form-group">
       <label for="reason">Důvod</label><br />
-      <input type="text" value="" id="reason" name="reason" required/>
+      <input type="text" id="reason" name="reason" required [(ngModel)]="state.reason"/>
     </div>
     <button type="submit" [disabled]="!reportForm.form.valid" class="btn btn-success">Prásk!</button><br /><br />
   </form>
