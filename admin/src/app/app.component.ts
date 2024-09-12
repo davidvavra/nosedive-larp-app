@@ -100,7 +100,7 @@ export class User {
 }
 
 let NO_USER = new User("unknown", "-- Nikdo --", "")
-let LIVE_NPC_IDS = ["_bara", "_david", "_vaclav", "_radka"]
+let LIVE_NPC_IDS = ["_barman", "_david", "_vaclav", "_radka"]
 
 export interface Channels {
   channels: Channel[]
