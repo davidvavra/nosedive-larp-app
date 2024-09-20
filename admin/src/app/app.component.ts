@@ -50,7 +50,7 @@ export class AppComponent {
       "reason": this.state.reason,
       "createdAt": serverTimestamp()
     })
-    let feedChannelId = "C06GTM5JJJC" // TODO: change every run!
+    let feedChannelId = "C07MB425KFV" // TODO: change every run!
     let message = (this.state.reporter2 == NO_USER) ?
       "Uživateli " + this.state.victim.name + " bylo sníženo hodnocení o " + this.state.penalty + "\n\nDůvod: " + this.state.reason + "\n\nDěkujeme uživateli " + this.state.reporter1.name + " za reportování, za odměnu bylo zvýšeno hodnocení o " + this.state.reward
     :
